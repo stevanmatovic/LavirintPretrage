@@ -24,8 +24,8 @@ namespace Lavirint
         
         public List<State> mogucaSledecaStanja()
         {
-            //TODO1: Implementirati metodu tako da odredjuje dozvoljeno kretanje u lavirintu
-            //TODO2: Prosiriti metodu tako da se ne moze prolaziti kroz sive kutije
+            //TO DO1: Implementirati metodu tako da odredjuje dozvoljeno kretanje u lavirintu
+            //TO DO2: Prosiriti metodu tako da se ne moze prolaziti kroz sive kutije
             List<State> rez = new List<State>();
 
             for (int ind = 0; ind < moves.GetLength(0); ind++)
