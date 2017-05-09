@@ -80,13 +80,17 @@ namespace Lavirint
                         pocetnoStanje.markJ = j;
                         displayPanel1.iconI = i;
                         displayPanel1.iconJ = j;
-                    }else if (tt == 3)
+                    } else if (tt == 3)
                     { // KRAJNJE STANJE
                         krajnjeStanje = new State();
                         krajnjeStanje.markI = i;
                         krajnjeStanje.markJ = j;
                     }
-                }
+                    else if (tt == 4)
+                    { // PLAVA KUTIJA
+                        
+                    }
+                }              
             }
         }
 
@@ -170,9 +174,16 @@ namespace Lavirint
         private void ADepth_Click(object sender, EventArgs e)
         {
             inicijalizacijaPretrage();
-            ADepthSearch aDepth = new ADepthSearch();
+            AStarSearch aStar = new AStarSearch();
             State sp = pocetnoStanje;
-            //TODO 6: Pozvati odgovarajuce metode ADepthSearch klase
+            State solution = null;
+            State plavaKutija = null;
+                
+
+            if (solution != null)
+            {
+                resenje = solution.path();
+            }
             displayPanel1.Refresh();
         }
 

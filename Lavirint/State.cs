@@ -10,7 +10,11 @@ namespace Lavirint
         State parent;
         public int markI, markJ; //vrsta i kolona
         public double cost;
-        private int[,] moves = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        public bool pokupio=false;
+        private int[,] movesKralj = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        private int[,] movesKonj = { { 1, 2 }, { 1, -2 } ,{ -1, 2 }, { -1, -2 }, { 2, 1 }, { 2, -1 }, {-2, 1 },{ -2 ,-1} };
+
+
         public State sledeceStanje(int markI, int markJ)
         {
             State rez = new State();
@@ -21,23 +25,14 @@ namespace Lavirint
             return rez;
         }
 
-        
+      
+
         public List<State> mogucaSledecaStanja()
         {
-            //TO DO1: Implementirati metodu tako da odredjuje dozvoljeno kretanje u lavirintu
-            //TO DO2: Prosiriti metodu tako da se ne moze prolaziti kroz sive kutije
+            
             List<State> rez = new List<State>();
 
-            for (int ind = 0; ind < moves.GetLength(0); ind++)
-            {
-                int newI = this.markI + moves[ind, 0];
-                int newJ = this.markJ + moves[ind, 1];
-
-                if (isAllowedState(newI, newJ))
-                {
-                    rez.Add(sledeceStanje(newI, newJ));
-                }
-            }
+            dodajStanjaZaLovca(rez);
 
             return rez;
         }
@@ -48,7 +43,7 @@ namespace Lavirint
                 return false;
             if (newI >= Main.brojVrsta || newJ >= Main.brojKolona)
                 return false;
-            if (lavirint[newI, newJ] == 1)      //ukoliko je siv polje
+            if (lavirint[newI, newJ] == 1)      //ukoliko je sivo polje
                 return false;
 
             return true;
@@ -78,6 +73,170 @@ namespace Lavirint
             return putanja;
         }
 
-        
+
+        public void dodajStanjaZaKralja(List<State> rez)
+        {
+            for (int ind = 0; ind < movesKonj.GetLength(0); ind++)
+            {
+                int newI = this.markI + movesKralj[ind, 0];
+                int newJ = this.markJ + movesKralj[ind, 1];
+
+                if (isAllowedState(newI, newJ))
+                {
+                    rez.Add(sledeceStanje(newI, newJ));
+                }
+            }
+        }
+
+        public void dodajStanjaZaKonja(List<State> rez) {
+            for (int ind = 0; ind < movesKonj.GetLength(0); ind++)
+            {
+                int newI = this.markI + movesKonj[ind, 0];
+                int newJ = this.markJ + movesKonj[ind, 1];
+
+                if (isAllowedState(newI, newJ))
+                {
+                    rez.Add(sledeceStanje(newI, newJ));
+                }
+            }
+        }
+
+        public void dodajStanjaZaTopa(List<State> rez)
+        {
+            int brojac = 1;
+
+            while ((markI + brojac < Main.brojVrsta) && (lavirint[markI + brojac, markJ] != 1))  // dole
+            {
+                rez.Add(sledeceStanje(markI + brojac, markJ));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI - brojac > -1) && (lavirint[markI - brojac, markJ] != 1))  // gore
+            {
+                rez.Add(sledeceStanje(markI - brojac, markJ));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markJ + brojac < Main.brojKolona) && (lavirint[markI, markJ + brojac] != 1))  // desno
+            {
+                rez.Add(sledeceStanje(markI, markJ + brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markJ - brojac > -1) && (lavirint[markI, markJ - brojac] != 1))  // levo
+            {
+                rez.Add(sledeceStanje(markI, markJ - brojac));
+                brojac++;
+            }
+        }
+
+        public void dodajStanjaZaLovca(List<State> rez)
+        {
+            int brojac = 1;
+
+            while ((markI + brojac < Main.brojVrsta) && (markJ + brojac < Main.brojKolona) && (lavirint[markI + brojac, markJ + brojac] != 1))  // dole-desno
+            {
+                rez.Add(sledeceStanje(markI + brojac, markJ + brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI + brojac < Main.brojVrsta) && (markJ - brojac > -1) && (lavirint[markI + brojac, markJ - brojac] != 1))  // dole-levo
+            {
+                rez.Add(sledeceStanje(markI + brojac, markJ - brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI - brojac > -1) && (markJ + brojac < Main.brojKolona) && (lavirint[markI - brojac, markJ + brojac] != 1))  // gore-desno
+            {
+                rez.Add(sledeceStanje(markI - brojac, markJ + brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI - brojac > -1) && (markJ - brojac > -1) && (lavirint[markI - brojac, markJ - brojac] != 1))  // gore-levo
+            {
+                rez.Add(sledeceStanje(markI - brojac, markJ - brojac));
+                brojac++;
+            }
+        }
+
+        public void dodajStanjaZaKraljicu(List<State> rez)
+        {
+            int brojac = 1;
+
+            while ((markI + brojac < Main.brojVrsta) && (lavirint[markI + brojac, markJ] != 1))  // dole
+            {
+                rez.Add(sledeceStanje(markI + brojac, markJ));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI - brojac > -1) && (lavirint[markI - brojac, markJ] != 1))  // gore
+            {
+                rez.Add(sledeceStanje(markI - brojac, markJ));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markJ + brojac < Main.brojKolona) && (lavirint[markI, markJ + brojac] != 1))  // desno
+            {
+                rez.Add(sledeceStanje(markI, markJ + brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markJ - brojac > -1) && (lavirint[markI, markJ - brojac] != 1))  // levo
+            {
+                rez.Add(sledeceStanje(markI, markJ - brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI + brojac < Main.brojVrsta) && (markJ + brojac < Main.brojKolona) && (lavirint[markI + brojac, markJ + brojac] != 1))  // dole-desno
+            {
+                rez.Add(sledeceStanje(markI + brojac, markJ + brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI + brojac < Main.brojVrsta) && (markJ - brojac > -1) && (lavirint[markI + brojac, markJ - brojac] != 1))  // dole-levo
+            {
+                rez.Add(sledeceStanje(markI + brojac, markJ - brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI - brojac > -1) && (markJ + brojac < Main.brojKolona) && (lavirint[markI - brojac, markJ + brojac] != 1))  // gore-desno
+            {
+                rez.Add(sledeceStanje(markI - brojac, markJ + brojac));
+                brojac++;
+            }
+
+            brojac = 1;
+
+            while ((markI - brojac > -1) && (markJ - brojac > -1) && (lavirint[markI - brojac, markJ - brojac] != 1))  // gore-levo
+            {
+                rez.Add(sledeceStanje(markI - brojac, markJ - brojac));
+                brojac++;
+            }
+        }
+
     }
 }
