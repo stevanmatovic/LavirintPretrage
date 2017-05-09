@@ -32,7 +32,7 @@ namespace Lavirint
             
             List<State> rez = new List<State>();
 
-            dodajStanjaZaLovca(rez);
+            dodajStanjaZaKralja(rez);
 
             return rez;
         }
@@ -76,7 +76,7 @@ namespace Lavirint
 
         public void dodajStanjaZaKralja(List<State> rez)
         {
-            for (int ind = 0; ind < movesKonj.GetLength(0); ind++)
+            for (int ind = 0; ind < movesKralj.GetLength(0); ind++)
             {
                 int newI = this.markI + movesKralj[ind, 0];
                 int newJ = this.markJ + movesKralj[ind, 1];
