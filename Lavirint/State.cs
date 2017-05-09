@@ -11,7 +11,7 @@ namespace Lavirint
         public int markI, markJ; //vrsta i kolona
         public double cost;
         public bool pokupio=false;
-        private int[,] movesKralj = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        private int[,] movesKralj = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } ,{ 1, 1 }, {1, -1 },{-1 , 1 },{-1,-1 } };
         private int[,] movesKonj = { { 1, 2 }, { 1, -2 } ,{ -1, 2 }, { -1, -2 }, { 2, 1 }, { 2, -1 }, {-2, 1 },{ -2 ,-1} };
 
 
@@ -22,17 +22,22 @@ namespace Lavirint
             rez.markJ = markJ;
             rez.parent = this;
             rez.cost = this.cost + 1;
+            if (lavirint[markI, markJ] == 6)        // ukoliko je na vatri cena +20
+                rez.cost += 20;
+            else if (aroundFire(markI,markJ)) {     //ukoliko je jedno polje od vatre cena +10
+                rez.cost += 10;
+            }
             return rez;
         }
 
-      
+        
 
         public List<State> mogucaSledecaStanja()
         {
             
             List<State> rez = new List<State>();
 
-            dodajStanjaZaKralja(rez);
+            dodajStanjaZaKraljicu(rez);
 
             return rez;
         }
@@ -73,6 +78,18 @@ namespace Lavirint
             return putanja;
         }
 
+        private bool aroundFire(int markI, int markJ)       // ukoliko je bar jedno polje oko vatre vraca ture
+        {
+            for (int ind = 0; ind < movesKralj.GetLength(0); ind++)
+            {
+                int newI = this.markI + movesKralj[ind, 0];
+                int newJ = this.markJ + movesKralj[ind, 1];
+
+                if (isAllowedState(newI, newJ) && lavirint[newI, newJ] == 6)
+                    return true;
+            }
+            return false;
+        }
 
         public void dodajStanjaZaKralja(List<State> rez)
         {

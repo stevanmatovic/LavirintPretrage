@@ -90,6 +90,14 @@ namespace Lavirint
                     { // PLAVA KUTIJA
                         
                     }
+                    else if (tt == 5)
+                    { // Narandzasta KUTIJA
+
+                    }
+                    else if (tt == 6)
+                    { // VATRA
+
+                    }
                 }              
             }
         }
