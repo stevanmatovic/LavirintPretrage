@@ -65,7 +65,7 @@ namespace Lavirint
 
         public static State pocetnoStanje = null;
         public static State krajnjeStanje = null;
-
+        public static List<Kutija> teleporti = new List<Kutija>();
 
         private void inicijalizacijaPretrage() {
             displayPanel1.resetLavirintPoruke();
@@ -101,6 +101,10 @@ namespace Lavirint
                     else if (tt == 6)
                     { // VATRA
 
+                    }
+                    else if (tt == 7)
+                    { // TELEPORT
+                        teleporti.Add(new Kutija(i, j));
                     }
                 }              
             }

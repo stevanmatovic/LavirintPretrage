@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lavirint
 {
-    class Kutija
+    public class Kutija
     {
 
         public int I { get; set; }

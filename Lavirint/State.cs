@@ -89,6 +89,14 @@ namespace Lavirint
             }
 
 
+            if (jeTeleport(markI, markJ)) {
+                foreach (Kutija kutija in Main.teleporti)
+                {
+                    if (!((kutija.I == markI) && (kutija.J == markJ)))
+                        rez.Add(sledeceStanje(kutija.I, kutija.J));
+                }
+            }
+
             if ((pokupljenoP == Main.brojPlavih) && (pokupljenoN == Main.brojNarandzastih))
             {
                 this.gotovo = true;
@@ -98,6 +106,8 @@ namespace Lavirint
 
             return rez;
         }
+
+        
 
         private bool isAllowedState(int newI, int newJ)
         {
@@ -148,8 +158,15 @@ namespace Lavirint
             return false;
         }
 
-
-
+        private bool jeTeleport(int markI, int markJ)
+        {
+            foreach (Kutija kutija in Main.teleporti)
+            {
+                if ((kutija.I == markI) && (kutija.J == markJ))
+                    return true;
+            }
+            return false;
+        }
         public void dodajStanjaZaKralja(List<State> rez)
         {
             for (int ind = 0; ind < movesKralj.GetLength(0); ind++)
