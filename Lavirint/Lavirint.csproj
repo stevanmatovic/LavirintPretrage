@@ -59,6 +59,7 @@
       <DependentUpon>DisplayPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="IterativeDepthFirstSearch.cs" />
+    <Compile Include="Kutija.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

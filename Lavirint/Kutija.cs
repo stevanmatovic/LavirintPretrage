@@ -6,25 +6,13 @@ namespace Lavirint
 {
     class Kutija
     {
-        private int i { get; set; }
-        private int j { get; set; }
 
-        public int getI() {
-            return i;
-        }
+        public int I { get; set; }
+        public int J { get; set; }
 
-        public int getJ()
-        {
-            return j;
-        }
         public Kutija(int i,int j) {
-            this.i = i;
-            this.j = j;
-        }
-
-        public Kutija(Kutija k) {
-            this.i = k.i;
-            this.j = k.j;
+            this.I = i;
+            this.J = j;
         }
 
     }

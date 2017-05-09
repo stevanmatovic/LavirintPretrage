@@ -11,9 +11,14 @@ namespace Lavirint
         public int markI, markJ; //vrsta i kolona
         public double cost;
         public bool pokupio=false;
-        private int[,] movesKralj = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } ,{ 1, 1 }, {1, -1 },{-1 , 1 },{-1,-1 } };
-        private int[,] movesKonj = { { 1, 2 }, { 1, -2 } ,{ -1, 2 }, { -1, -2 }, { 2, 1 }, { 2, -1 }, {-2, 1 },{ -2 ,-1} };
-
+        private List<Kutija> plaveKutije = new List<Kutija>();
+        private List<Kutija> narandzasteKutije = new List<Kutija>();
+        private int pokupljenoP;
+        private int pokupljenoN;
+        public int level { get; set; }
+        private bool gotovo = false;
+        private int[,] movesKralj = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+        private int[,] movesKonj = { { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 }, { 2, 1 }, { 2, -1 }, { -2, 1 }, { -2, -1 } };
 
         public State sledeceStanje(int markI, int markJ)
         {
@@ -22,11 +27,22 @@ namespace Lavirint
             rez.markJ = markJ;
             rez.parent = this;
             rez.cost = this.cost + 1;
+            rez.level = level + 1;
             if (lavirint[markI, markJ] == 6)        // ukoliko je na vatri cena +20
                 rez.cost += 20;
             else if (aroundFire(markI,markJ)) {     //ukoliko je jedno polje od vatre cena +10
                 rez.cost += 10;
             }
+
+            foreach (Kutija k in this.plaveKutije)
+                rez.plaveKutije.Add(k);
+            foreach (Kutija k in this.narandzasteKutije)
+                rez.narandzasteKutije.Add(k);
+
+            rez.pokupljenoN = this.pokupljenoN;
+            rez.pokupljenoP = this.pokupljenoP;
+            rez.gotovo = this.gotovo;
+
             return rez;
         }
 
@@ -34,10 +50,51 @@ namespace Lavirint
 
         public List<State> mogucaSledecaStanja()
         {
-            
             List<State> rez = new List<State>();
 
-            dodajStanjaZaKraljicu(rez);
+            if (lavirint[markI, markJ] == 4)
+            {
+                bool nadjeno = false;
+                foreach (Kutija kutija in plaveKutije)
+                {
+                    if ((kutija.I == markI) && (kutija.J == markJ))
+                    {
+                        nadjeno = true;
+                        break;
+                    }
+                }
+                if (!nadjeno && (pokupljenoP < Main.brojPlavih))
+                {
+                    this.plaveKutije.Add(new Kutija(markI,markJ));
+                    pokupljenoP++;
+                }
+            }
+
+            if (lavirint[markI, markJ] == 5)
+            {
+                bool nadjeno = false;
+                foreach (Kutija kutija in narandzasteKutije)
+                {
+                    if ((kutija.I == markI) && (kutija.J == markJ))
+                    {
+                        nadjeno = true;
+                        break;
+                    }
+                }
+                if (!nadjeno && (pokupljenoN < Main.brojNarandzastih))
+                {
+                    this.narandzasteKutije.Add(new Kutija(markI, markJ));
+                    pokupljenoN++;
+                }
+            }
+
+
+            if ((pokupljenoP == Main.brojPlavih) && (pokupljenoN == Main.brojNarandzastih))
+            {
+                this.gotovo = true;
+            }
+
+            dodajStanjaZaKralja(rez);
 
             return rez;
         }
@@ -58,12 +115,12 @@ namespace Lavirint
 
         public override int GetHashCode()
         {
-            return 100*markI + markJ;
+            return 100000*narandzasteKutije.Count+10000*plaveKutije.Count + 100*markI + markJ;
         }
 
         public bool isKrajnjeStanje()
         {
-            return Main.krajnjeStanje.markI == markI && Main.krajnjeStanje.markJ == markJ;
+            return Main.krajnjeStanje.markI == markI && Main.krajnjeStanje.markJ == markJ && this.gotovo;
         }
 
         public List<State> path()
@@ -90,6 +147,8 @@ namespace Lavirint
             }
             return false;
         }
+
+
 
         public void dodajStanjaZaKralja(List<State> rez)
         {

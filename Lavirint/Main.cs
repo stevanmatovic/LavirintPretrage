@@ -15,6 +15,8 @@ namespace Lavirint
 {
     public partial class Main : Form
     {
+        public static int brojPlavih = 0;
+        public static int brojNarandzastih = 0;
         public static int brojVrsta = 10, brojKolona = 10;
         public static List<State> allSearchStates;
         public Main()
@@ -69,6 +71,8 @@ namespace Lavirint
             displayPanel1.resetLavirintPoruke();
             displayPanel1.resetLavirintPoseceno();
             allSearchStates = new List<State>();
+            brojNarandzastih = 0;
+            brojPlavih = 0;
             for (int i = 0; i < Main.brojVrsta; i++)
             {
                 for (int j = 0; j < Main.brojKolona; j++)
@@ -88,11 +92,11 @@ namespace Lavirint
                     }
                     else if (tt == 4)
                     { // PLAVA KUTIJA
-                        
+                        brojPlavih++;
                     }
                     else if (tt == 5)
                     { // Narandzasta KUTIJA
-
+                        brojNarandzastih++;
                     }
                     else if (tt == 6)
                     { // VATRA
