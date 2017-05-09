@@ -15,6 +15,7 @@ namespace Lavirint
         private List<Kutija> narandzasteKutije = new List<Kutija>();
         private int pokupljenoP;
         private int pokupljenoN;
+        private int ukupno;
         public int level { get; set; }
         private bool gotovo = false;
         private int[,] movesKralj = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
@@ -28,6 +29,7 @@ namespace Lavirint
             rez.parent = this;
             rez.cost = this.cost + 1;
             rez.level = level + 1;
+            rez.ukupno = this.ukupno;
             if (lavirint[markI, markJ] == 6)        // ukoliko je na vatri cena +20
                 rez.cost += 20;
             else if (aroundFire(markI,markJ)) {     //ukoliko je jedno polje od vatre cena +10
@@ -63,10 +65,11 @@ namespace Lavirint
                         break;
                     }
                 }
-                if (!nadjeno && (pokupljenoP < Main.brojPlavih))
+                if (!nadjeno && (pokupljenoP < Main.brojPlavih) && (ukupno==0 || ukupno==2 || ukupno ==3))
                 {
                     this.plaveKutije.Add(new Kutija(markI,markJ));
                     pokupljenoP++;
+                    ukupno++;
                 }
             }
 
@@ -81,10 +84,11 @@ namespace Lavirint
                         break;
                     }
                 }
-                if (!nadjeno && (pokupljenoN < Main.brojNarandzastih))
+                if (!nadjeno && (pokupljenoN < Main.brojNarandzastih) && (ukupno == 1 || ukupno == 4))
                 {
                     this.narandzasteKutije.Add(new Kutija(markI, markJ));
                     pokupljenoN++;
+                    ukupno++;
                 }
             }
 
